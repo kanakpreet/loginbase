@@ -1,22 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Sales Tax Report</title>
     <link rel="stylesheet" href="/styles.css">
     <style>
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            position: relative;
+            z-index: 1001;
+        }
+
+        .top-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .top-nav .nav-home {
+            background-color: #3498db;
+        }
+
+        .top-nav .nav-home:hover {
+            background-color: #2980b9;
+        }
+
+        .top-nav .nav-logout {
+            background-color: #e74c3c;
+        }
+
+        .top-nav .nav-logout:hover {
+            background-color: #c0392b;
+        }
+
         body {
             font-family: Arial, sans-serif;
         }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
         }
+
         .dropdown {
             margin-bottom: 20px;
         }
+
         .button {
             background-color: #66b3ff;
             border: none;
@@ -29,50 +69,63 @@
             margin: 4px 2px;
             cursor: pointer;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-        table, th, td {
+
+        table,
+        th,
+        td {
             border: 1px solid #ddd;
         }
-        th, td {
+
+        th,
+        td {
             padding: 12px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
+
         tr:hover {
             background-color: #f1f1f1;
         }
+
         .passcode-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
         }
+
         .passcode-box {
             background: white;
             padding: 40px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
+
         .passcode-box h2 {
             margin-bottom: 20px;
             color: #2c3e50;
         }
+
         .passcode-box input {
             padding: 12px 20px;
             font-size: 18px;
@@ -82,10 +135,12 @@
             width: 200px;
             letter-spacing: 8px;
         }
+
         .passcode-box input:focus {
             outline: none;
             border-color: #3498db;
         }
+
         .passcode-box button {
             display: block;
             width: 100%;
@@ -98,29 +153,39 @@
             font-size: 16px;
             cursor: pointer;
         }
+
         .passcode-box button:hover {
             background: #2980b9;
         }
+
         .passcode-error {
             color: #e74c3c;
             margin-top: 10px;
             display: none;
         }
+
         .report-content {
             display: none;
         }
+
         .back-link {
             display: inline-block;
             margin-bottom: 20px;
             color: #3498db;
             text-decoration: none;
         }
+
         .back-link:hover {
             text-decoration: underline;
         }
     </style>
 </head>
+
 <body>
+    <div class="top-nav">
+        <a href="/admin" class="nav-home">🏠 Home</a>
+        <a href="/logout" class="nav-logout">🔓 Logout</a>
+    </div>
     <div class="passcode-overlay" id="passcodeOverlay">
         <div class="passcode-box">
             <h2>🔒 Enter Passcode</h2>
@@ -139,17 +204,19 @@
                 <label for="quarter">Select Quarter:</label>
                 <select name="quarter" id="quarter" required>
                     <% quarters.forEach(function(quarter) { %>
-                        <option value="<%= quarter.start %>|<%= quarter.end %>" <%= selectedQuarter === (quarter.start + '|' + quarter.end) ? 'selected' : '' %>>
+                        <option value="<%= quarter.start %>|<%= quarter.end %>" <%=selectedQuarter===(quarter.start
+                            + '|' + quarter.end) ? 'selected' : '' %>>
                             <%= quarter.label %>
                         </option>
-                    <% }); %>
+                        <% }); %>
                 </select>
             </div>
             <button type="submit" class="button">Generate Report</button>
         </form>
 
-        <% if (invoices.length > 0) { %>
-            <h2>Sales Tax Report for <%= selectedQuarter %></h2>
+        <% if (invoices.length> 0) { %>
+            <h2>Sales Tax Report for <%= selectedQuarter %>
+            </h2>
             <table>
                 <thead>
                     <tr>
@@ -162,37 +229,46 @@
                 <tbody>
                     <% invoices.forEach(function(invoice) { %>
                         <tr>
-                            <td><a href="/admin/invoices/<%= invoice.invoiceNumber %>"><%= invoice.invoiceNumber %></a></td>
-                            <td><%= invoice.date %></td>
-                            <td>$<%= invoice.salesTax %></td>
-                            <td>$<%= invoice.totalAmount %></td>
+                            <td><a href="/admin/invoices/<%= invoice.invoiceNumber %>">
+                                    <%= invoice.invoiceNumber %>
+                                </a></td>
+                            <td>
+                                <%= invoice.date %>
+                            </td>
+                            <td>$<%= invoice.salesTax %>
+                            </td>
+                            <td>$<%= invoice.totalAmount %>
+                            </td>
                         </tr>
-                    <% }); %>
+                        <% }); %>
                 </tbody>
             </table>
-            <h3>Total Gross Receipts from All Sales: $<%= totalGrossReceipts %></h3>
-            <h3>Receipts Not Subject to Sales Tax: $<%= receiptsNotSubjectToSalesTax %></h3>
-            <h3>Sales Tax Collected: $<%= totalSalesTax %></h3>
-        <% } %>
+            <h3>Total Gross Receipts from All Sales: $<%= totalGrossReceipts %>
+            </h3>
+            <h3>Receipts Not Subject to Sales Tax: $<%= receiptsNotSubjectToSalesTax %>
+            </h3>
+            <h3>Sales Tax Collected: $<%= totalSalesTax %>
+            </h3>
+            <% } %>
     </div>
 
     <script>
         const CORRECT_PASSCODE = '6697';
         const UNLOCK_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
-        
+
         // Check if unlocked within the last 5 minutes
         const unlockTime = localStorage.getItem('reportUnlockTime');
         if (unlockTime && (Date.now() - parseInt(unlockTime)) < UNLOCK_DURATION) {
             document.getElementById('passcodeOverlay').style.display = 'none';
             document.getElementById('reportContent').style.display = 'block';
         }
-        
-        document.getElementById('passcodeInput').addEventListener('keypress', function(e) {
+
+        document.getElementById('passcodeInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 checkPasscode();
             }
         });
-        
+
         function checkPasscode() {
             const input = document.getElementById('passcodeInput').value;
             if (input === CORRECT_PASSCODE) {
@@ -207,4 +283,5 @@
         }
     </script>
 </body>
+
 </html>

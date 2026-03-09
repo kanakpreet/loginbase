@@ -1,10 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Return Form</title>
     <style>
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+        }
+
+        .top-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .top-nav .nav-home {
+            background-color: #3498db;
+        }
+
+        .top-nav .nav-home:hover {
+            background-color: #2980b9;
+        }
+
+        .top-nav .nav-logout {
+            background-color: #e74c3c;
+        }
+
+        .top-nav .nav-logout:hover {
+            background-color: #c0392b;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f2f2f7;
@@ -18,7 +53,8 @@
 
         .container {
             width: 100%;
-            max-width: 375px; /* iPhone 8 width */
+            max-width: 375px;
+            /* iPhone 8 width */
             margin: 0 auto;
             background: #ffffff;
             border-radius: 15px;
@@ -49,7 +85,8 @@
             margin-bottom: 15px;
         }
 
-        .step input, .step select {
+        .step input,
+        .step select {
             width: 100%;
             padding: 12px;
             font-size: 16px;
@@ -114,7 +151,12 @@
         }
     </style>
 </head>
+
 <body>
+    <div class="top-nav">
+        <a href="/admin" class="nav-home">🏠 Home</a>
+        <a href="/logout" class="nav-logout">🔓 Logout</a>
+    </div>
     <div class="container">
         <h1>Return Form</h1>
         <form id="returnForm" method="POST" action="/admin/returns" enctype="multipart/form-data">
@@ -204,4 +246,5 @@
         showStep();
     </script>
 </body>
+
 </html>

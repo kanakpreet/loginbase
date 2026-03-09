@@ -1,10 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vendor Portal</title>
     <style>
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+        }
+
+        .top-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .top-nav .nav-home {
+            background-color: #3498db;
+        }
+
+        .top-nav .nav-home:hover {
+            background-color: #2980b9;
+        }
+
+        .top-nav .nav-logout {
+            background-color: #e74c3c;
+        }
+
+        .top-nav .nav-logout:hover {
+            background-color: #c0392b;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -12,28 +47,33 @@
             padding: 20px;
             min-height: 100vh;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background-color: white;
             padding: 30px;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
+
         h1 {
             color: #333;
             margin: 0;
         }
+
         .header-buttons {
             display: flex;
             gap: 10px;
         }
+
         .header-buttons a {
             padding: 10px 20px;
             background-color: #007bff;
@@ -41,12 +81,15 @@
             text-decoration: none;
             border-radius: 5px;
         }
+
         .header-buttons a:hover {
             background-color: #0056b3;
         }
+
         .search-bar {
             margin-bottom: 20px;
         }
+
         .search-bar input {
             width: 100%;
             padding: 10px;
@@ -54,50 +97,68 @@
             border-radius: 5px;
             font-size: 16px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        table, th, td {
+
+        table,
+        th,
+        td {
             border: 1px solid #ddd;
         }
-        th, td {
+
+        th,
+        td {
             padding: 12px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
             font-weight: bold;
         }
+
         tr:hover {
             background-color: #f5f5f5;
             cursor: pointer;
         }
+
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
             }
+
             .header {
                 flex-direction: column;
                 align-items: flex-start;
             }
+
             .header-buttons {
                 margin-top: 10px;
             }
         }
     </style>
 </head>
+
 <body>
+    <div class="top-nav">
+        <a href="/admin" class="nav-home">🏠 Home</a>
+        <a href="/logout" class="nav-logout">🔓 Logout</a>
+    </div>
     <div class="container">
         <div class="header">
-            <h1><%= vendorFilter ? `Vendor Invoices for ${vendorFilter}` : 'Vendor Invoices' %></h1>
+            <h1>
+                <%= vendorFilter ? `Vendor Invoices for ${vendorFilter}` : 'Vendor Invoices' %>
+            </h1>
             <div class="header-buttons">
                 <a href="/admin/purchases">Add Purchase</a>
                 <% if (vendorFilter) { %>
                     <a href="/admin/vendor-invoices">View All</a>
-                <% } %>
-                <a href="/admin">Back to Admin</a>
+                    <% } %>
+                        <a href="/admin">Back to Admin</a>
             </div>
         </div>
         <div class="search-bar">
@@ -117,20 +178,32 @@
                 </tr>
             </thead>
             <tbody id="vendorPortalTableBody">
-                <% purchases.forEach((purchase, index) => { %>
+                <% purchases.forEach((purchase, index)=> { %>
                     <tr>
-                        <td><%= index + 1 %></td>
-                        <td><%= purchase.PurchaseID %></td>
-                        <td><%= purchase.vendorName %></td>
-                        <td><%= new Date(purchase.dateCreated).toLocaleDateString('en-US') %></td>
-                        <td><%= purchase.invoiceNumber %></td>
-                        <td>$<%= ((purchase.invoiceTotal || 0)).toFixed(2) %></td>
-                        <td>$<%= ((purchase.accountBalance || 0)).toFixed(2) %></td>
+                        <td>
+                            <%= index + 1 %>
+                        </td>
+                        <td>
+                            <%= purchase.PurchaseID %>
+                        </td>
+                        <td>
+                            <%= purchase.vendorName %>
+                        </td>
+                        <td>
+                            <%= new Date(purchase.dateCreated).toLocaleDateString('en-US') %>
+                        </td>
+                        <td>
+                            <%= purchase.invoiceNumber %>
+                        </td>
+                        <td>$<%= ((purchase.invoiceTotal || 0)).toFixed(2) %>
+                        </td>
+                        <td>$<%= ((purchase.accountBalance || 0)).toFixed(2) %>
+                        </td>
                         <td class="actions">
                             <button onclick="deletePurchase(<%= purchase.PurchaseID %>)">Delete</button>
                         </td>
                     </tr>
-                <% }); %>
+                    <% }); %>
             </tbody>
         </table>
     </div>
@@ -159,19 +232,20 @@
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
                 })
-                .then(response => {
-                    if (response.ok) {
-                        location.reload();
-                    } else {
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            alert('Error deleting purchase.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         alert('Error deleting purchase.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error deleting purchase.');
-                });
+                    });
             }
         }
     </script>
 </body>
+
 </html>

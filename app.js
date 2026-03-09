@@ -38,7 +38,7 @@ function loadTenantData(tenantId) {
     const tenant = TENANTS[tenantId];
     if (!tenant) return;
     const dataFile = tenant.dataFile;
-    let data = { users: [], inventory: [], purchases: [], vendors: [], returns: [] };
+    let data = { users: [], inventory: [], purchases: [], vendors: [], returns: [], salesReps: [] };
     try {
         if (fs.existsSync(dataFile)) {
             data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
@@ -52,6 +52,7 @@ function loadTenantData(tenantId) {
         purchases: data.purchases || [],
         vendors: data.vendors || [],
         returns: data.returns || [],
+        salesReps: data.salesReps || [],
         categoryRanks: {}
     };
     // Load category ranks
@@ -79,6 +80,7 @@ function saveTenantData(tenantId) {
             purchases: store.purchases,
             vendors: store.vendors,
             returns: store.returns,
+            salesReps: store.salesReps || [],
             ItemsCategory: Object.keys(store.categoryRanks).map(cat => ({
                 Category: cat,
                 Rank: store.categoryRanks[cat]
@@ -99,12 +101,17 @@ async function initTenantAdmins() {
         if (!tenantData[tenantId]) loadTenantData(tenantId);
         const store = tenantData[tenantId];
         const adminEmail = `${tenantId}@supplystacker.com`;
-        const adminExists = store.users.some(u => u.email === adminEmail);
-        if (!adminExists) {
+        const existingAdmin = store.users.find(u => u.email === adminEmail);
+        if (!existingAdmin) {
             const hash = await bcrypt.hash('supplystacker', 10);
             store.users.push({ id: 1, email: adminEmail, password: hash, role: 'admin' });
             saveTenantData(tenantId);
             console.log(`[TENANT] Created admin user ${adminEmail} for ${tenant.name}`);
+        } else if (!existingAdmin.password || existingAdmin.password === '') {
+            // Fix admin with empty password
+            existingAdmin.password = await bcrypt.hash('supplystacker', 10);
+            saveTenantData(tenantId);
+            console.log(`[TENANT] Fixed empty password for admin ${adminEmail} in ${tenant.name}`);
         }
     }
 }
@@ -298,13 +305,15 @@ async function performCompressionAsync(inputPath, publicKey) {
 }
 
 let categoryRanks = {};
-// Load data from data.json
+// Load data from the first tenant's data file (default fallback)
 console.log('Current directory:', __dirname);
+const defaultTenantId = Object.keys(TENANTS)[0];
+const defaultDataFile = TENANTS[defaultTenantId].dataFile;
 let data = {};
 try {
-    data = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+    data = JSON.parse(fs.readFileSync(defaultDataFile, 'utf8'));
 } catch (e) {
-    console.log('data.json not found, starting fresh');
+    console.log(`${defaultDataFile} not found, starting fresh`);
 }
 let users = data.users || []; // To include both admin and customer users
 let inventory = data.inventory || [
@@ -381,7 +390,8 @@ function getDataFile(req) {
     if (tenantId && TENANTS[tenantId]) {
         return TENANTS[tenantId].dataFile;
     }
-    return 'data.json';
+    // Fallback to the first tenant's data file
+    return TENANTS[Object.keys(TENANTS)[0]].dataFile;
 }
 
 // Helper: get data file path by tenantId directly (for non-request contexts)
@@ -389,7 +399,8 @@ function getDataFileById(tenantId) {
     if (tenantId && TENANTS[tenantId]) {
         return TENANTS[tenantId].dataFile;
     }
-    return 'data.json';
+    // Fallback to the first tenant's data file
+    return TENANTS[Object.keys(TENANTS)[0]].dataFile;
 }
 
 // ==================== CROSS-TENANT INVENTORY SYNC ====================
@@ -407,7 +418,7 @@ function syncItemToOtherTenants(sourceTenantId, newItem) {
         }
         // Generate a new unique ID for this tenant
         const highestId = store.inventory.reduce((max, item) => item.id > max ? item.id : max, 0);
-        const syncedItem = { ...newItem, id: highestId + 1 };
+        const syncedItem = { ...newItem, id: highestId + 1, quantity: 0 };
         store.inventory.push(syncedItem);
         saveTenantData(tenantId);
         console.log(`[SYNC] Synced item "${newItem.itemName}" to ${tenantId}`);
@@ -453,7 +464,7 @@ function checkFileType(file, cb) {
 
 function loadData() {
     try {
-        const data = fs.readFileSync('data.json', 'utf8');
+        const data = fs.readFileSync(defaultDataFile, 'utf8');
         const json = JSON.parse(data);
 
         if (json && Array.isArray(json.users) && Array.isArray(json.inventory)) {
@@ -489,7 +500,7 @@ function loadData() {
             console.log('Data structure is not valid, not overwriting existing data.');
         }
     } catch (error) {
-        console.log('Error reading data.json, starting with empty arrays.');
+        console.log(`Error reading ${defaultDataFile}, starting with empty arrays.`);
         returns = []; // Initialize returns array if reading fails
     }
 }
@@ -519,7 +530,10 @@ setInterval(() => {
 function saveData() {
     try {
         // Read existing data to preserve any manual edits or extra fields
-        const existingData = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+        let existingData = {};
+        try {
+            existingData = JSON.parse(fs.readFileSync(defaultDataFile, 'utf8'));
+        } catch (e) { /* file may not exist yet */ }
         const dataToSave = {
             ...existingData,
             users: _originalGlobals ? _originalGlobals.users : users,
@@ -532,7 +546,7 @@ function saveData() {
                 Rank: (_originalGlobals ? _originalGlobals.categoryRanks : categoryRanks)[category]
             }))
         };
-        fs.writeFileSync('data.json', JSON.stringify(dataToSave, null, 2));
+        fs.writeFileSync(defaultDataFile, JSON.stringify(dataToSave, null, 2));
     } catch (error) {
         console.error('Error saving data:', error.message);
         console.error('Error stack:', error.stack);
@@ -544,10 +558,12 @@ function saveData() {
 
 const cron = require('node-cron'); // Add this at the top of the file along with other requires
 
-// Function to send the latest data.json file via email
+// Function to send the latest tenant data files via email
 function sendLatestDataJson() {
-    const filePath = path.join(__dirname, 'data.json');
-    emailService.sendBackupEmail('sales@supplystacker.com', 'Latest data.json file', 'Please find the latest data.json file attached.', filePath);
+    for (const [tenantId, tenant] of Object.entries(TENANTS)) {
+        const filePath = path.join(__dirname, tenant.dataFile);
+        emailService.sendBackupEmail('sales@supplystacker.com', `Latest ${tenant.dataFile} backup`, `Please find the latest ${tenant.dataFile} file attached.`, filePath);
+    }
 }
 
 // Schedule the task to run every 10 seconds
@@ -780,11 +796,13 @@ app.get('/admin/add-customer', (req, res) => {
     if (!req.session.loggedIn || req.session.user.role !== 'admin') {
         return res.redirect('/');
     }
-    res.render('add-customer');
+    const tenantId = req.session.tenantId;
+    const salesReps = (tenantId && tenantData[tenantId]) ? (tenantData[tenantId].salesReps || []) : [];
+    res.render('add-customer', { salesReps });
 });
 
 app.post('/admin/add-customer', async (req, res) => {
-    const { email, password, company, phone, addressLine1, addressLine2, city, state, zipCode, priceLevel, taxable } = req.body;
+    const { email, password, company, phone, addressLine1, addressLine2, city, state, zipCode, priceLevel, taxable, salesRepId } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newCustomer = {
@@ -800,6 +818,7 @@ app.post('/admin/add-customer', async (req, res) => {
         zipCode,
         priceLevel: parseInt(priceLevel),
         taxable: taxable === 'Yes',
+        salesRepId: salesRepId ? parseInt(salesRepId) : null,
         role: 'customer',
         invoices: []
     };
@@ -955,7 +974,9 @@ app.get('/admin/edit-customer/:id', (req, res) => {
     if (!customer) {
         return res.send('Customer not found.');
     }
-    res.render('edit-customer', { customer });
+    const tenantId = req.session.tenantId;
+    const salesReps = (tenantId && tenantData[tenantId]) ? (tenantData[tenantId].salesReps || []) : [];
+    res.render('edit-customer', { customer, salesReps });
 });
 
 app.post('/admin/edit-customer/:id', async (req, res) => {
@@ -977,6 +998,7 @@ app.post('/admin/edit-customer/:id', async (req, res) => {
     users[customerIndex].zipCode = req.body.zipCode;
     users[customerIndex].priceLevel = parseInt(req.body.priceLevel);
     users[customerIndex].taxable = req.body.taxable === 'Yes';
+    users[customerIndex].salesRepId = req.body.salesRepId ? parseInt(req.body.salesRepId) : null;
 
     saveData();
     res.redirect('/admin/view-customers');
@@ -1062,11 +1084,16 @@ app.get('/admin/invoices/:invoiceNumber', (req, res) => {
             return res.status(404).send('Invoice not found.');
         }
 
-        // Pass the invoice details, inventory (available products), and customer price level to the template
+        // Get salesReps for this tenant
+        const tenantId = (req.session && req.session.tenantId) || null;
+        const salesReps = (tenantId && tenantData[tenantId]) ? (tenantData[tenantId].salesReps || []) : [];
+
+        // Pass the invoice details, inventory (available products), customer price level, and sales reps to the template
         res.render('invoice-details', {
             invoice: invoiceDetails,
             availableProducts: inventory,
-            customerPriceLevel: customerPriceLevel
+            customerPriceLevel: customerPriceLevel,
+            salesReps: salesReps
         });
     });
 });
@@ -1083,10 +1110,19 @@ app.post('/admin/invoices/:invoiceNumber', (req, res) => {
     const newInvoiceNumber = req.body.invoiceNumber;
     const updatedNote = req.body.notes;
 
+    // Get tenant-specific data
+    const tenantId = req.session.tenantId;
+    const store = tenantData[tenantId];
+    if (!store) {
+        return res.status(500).send('Tenant data not found.');
+    }
+    const tenantUsers = store.users;
+    const tenantInventory = store.inventory;
+
     let userIndex = null;
     let invoiceIndex = null;
 
-    users.forEach((user, uIndex) => {
+    tenantUsers.forEach((user, uIndex) => {
         if (user.invoices && user.invoices.length > 0) {
             const foundInvoiceIndex = user.invoices.findIndex(inv => inv.invoiceNumber === oldInvoiceNumber);
             if (foundInvoiceIndex !== -1) {
@@ -1124,7 +1160,7 @@ app.post('/admin/invoices/:invoiceNumber', (req, res) => {
     // Update invoice details
     try {
         // Get the old products before updating to adjust inventory
-        const oldProducts = users[userIndex].invoices[invoiceIndex].products || [];
+        const oldProducts = tenantUsers[userIndex].invoices[invoiceIndex].products || [];
         const newProducts = req.body.products || [];
 
         // Adjust inventory: add back old quantities, subtract new quantities
@@ -1132,7 +1168,7 @@ app.post('/admin/invoices/:invoiceNumber', (req, res) => {
 
         // Step 1: Add back all old product quantities to inventory
         oldProducts.forEach(oldProduct => {
-            const inventoryItem = inventory.find(item => item.itemName === oldProduct.productName);
+            const inventoryItem = tenantInventory.find(item => item.itemName === oldProduct.productName);
             if (inventoryItem) {
                 const oldQty = inventoryItem.quantity || 0;
                 inventoryItem.quantity = oldQty + (oldProduct.quantity || 0);
@@ -1142,7 +1178,7 @@ app.post('/admin/invoices/:invoiceNumber', (req, res) => {
 
         // Step 2: Subtract all new product quantities from inventory
         newProducts.forEach(newProduct => {
-            const inventoryItem = inventory.find(item => item.itemName === newProduct.productName);
+            const inventoryItem = tenantInventory.find(item => item.itemName === newProduct.productName);
             if (inventoryItem) {
                 const oldQty = inventoryItem.quantity || 0;
                 inventoryItem.quantity = Math.max(0, oldQty - (newProduct.quantity || 0));
@@ -1152,8 +1188,8 @@ app.post('/admin/invoices/:invoiceNumber', (req, res) => {
 
         console.log('[INVENTORY ADJUSTMENT] Completed.');
 
-        users[userIndex].invoices[invoiceIndex] = {
-            ...users[userIndex].invoices[invoiceIndex],
+        tenantUsers[userIndex].invoices[invoiceIndex] = {
+            ...tenantUsers[userIndex].invoices[invoiceIndex],
             ...req.body, // Spread new updates
             CashPayment: parseFloat(req.body.CashPayment) || 0,
             AccountPayment: parseFloat(req.body.AccountPayment) || 0,
@@ -1162,14 +1198,19 @@ app.post('/admin/invoices/:invoiceNumber', (req, res) => {
             subtotal: parseFloat(req.body.subtotal) || 0,
             totalAmount: parseFloat(req.body.totalAmount) || 0,
             totalBalance: parseFloat(req.body.totalBalance) || 0,
-            paid: req.body.totalBalance === 0
+            paid: req.body.totalBalance === 0,
+            salesRepId: req.body.salesRepId ? parseInt(req.body.salesRepId) : null
         };
 
-        saveData(); // Save changes to data.json
-        console.log("Invoice updated successfully:", users[userIndex].invoices[invoiceIndex]);
+        saveTenantData(tenantId); // Save changes to tenant data file
+        console.log("Invoice updated successfully:", tenantUsers[userIndex].invoices[invoiceIndex]);
 
-        // Redirect to the new invoice number page instead of sending JSON
-        res.redirect(`/admin/invoices/${newInvoiceNumber}`);
+        // Return JSON response for fetch requests, redirect for form submissions
+        if (req.headers['content-type'] === 'application/json') {
+            res.json({ success: true, invoiceNumber: newInvoiceNumber });
+        } else {
+            res.redirect(`/admin/invoices/${newInvoiceNumber}`);
+        }
     } catch (error) {
         console.error("Error updating invoice:", error);
         res.status(500).send("An error occurred while updating the invoice.");
@@ -1218,7 +1259,7 @@ app.get('/admin/invoices/delete/:invoiceNumber', (req, res) => {
         console.log('[INVENTORY REVERSAL] Completed.');
     }
 
-    // Save updated data to data.json
+    // Save updated data to tenant data file
     saveData();
 
     // Redirect to the specified URL or default to /admin/invoices
@@ -1343,7 +1384,7 @@ app.get('/admin/manage-payment/invoices/delete/:invoiceNumber', (req, res) => {
         console.log('[INVENTORY REVERSAL] Completed.');
     }
 
-    // Save updated data to data.json
+    // Save updated data to tenant data file
     saveData();
 
     res.redirect('/admin/manage-payment');
@@ -1663,7 +1704,7 @@ app.post('/checkout', async (req, res) => {
         });
         console.log('[INVENTORY DEDUCTION] Completed.');
 
-        // Save data to data.json
+        // Save data to tenant data file
         saveData();
 
         // Generate PDF and send email
@@ -1983,7 +2024,7 @@ app.post('/admin/add-vendor/:id', (req, res) => {
         inventory[itemIndex].vendors.push({ name: vendorName, price: parseFloat(vendorPrice) });
     }
 
-    saveData();  // Save the updated data to data.json
+    saveData();  // Save the updated data to tenant data file
 
     res.json({ success: true });
 });
@@ -2002,7 +2043,7 @@ app.post('/admin/remove-vendor/:id', (req, res) => {
     const currentItem = inventory[itemIndex];
     currentItem.vendors = currentItem.vendors.filter(vendor => vendor.name.trim() !== vendorName.trim());
 
-    // Save the updated inventory to data.json
+    // Save the updated inventory to tenant data file
     saveData();
 
     res.status(200).send({ success: true });
@@ -2286,6 +2327,32 @@ app.get('/admin/manage-payment', (req, res) => {
         return res.redirect('/');
     }
     res.redirect('/admin/customer-manage-payment');
+});
+
+app.get('/admin/customer-manage-payment', (req, res) => {
+    if (!req.session.loggedIn || req.session.user.role !== 'admin') {
+        return res.redirect('/');
+    }
+
+    // Collect all invoices from all users
+    let allInvoices = [];
+    users.forEach(user => {
+        if (user.invoices && user.invoices.length > 0) {
+            allInvoices = allInvoices.concat(user.invoices);
+        }
+    });
+
+    // Sort: unpaid first, then by date (newest first)
+    allInvoices.sort((a, b) => {
+        // Unpaid invoices first
+        if (a.paid !== b.paid) {
+            return a.paid ? 1 : -1;
+        }
+        // Then by date (newest first)
+        return new Date(b.dateCreated) - new Date(a.dateCreated);
+    });
+
+    res.render('manage-payment', { invoices: allInvoices });
 });
 
 app.get('/admin/invoices', (req, res) => {
@@ -3286,7 +3353,7 @@ app.post('/admin/returns', multerUpload.array('images', 10), (req, res) => {
         // Add the new return to the returns array
         returns.push(newReturn);
 
-        // Save to data.json
+        // Save to tenant data file
         saveData();
 
         res.redirect('/admin/returns'); // Redirect back to the form for repeated submissions
@@ -3341,6 +3408,159 @@ app.get('/admin/manageReturns/:id/download', (req, res) => {
 
     archive.finalize();
 });
+
+// ==================== SALES REPRESENTATIVES ====================
+app.get('/admin/salesrep', (req, res) => {
+    if (!req.session.loggedIn || req.session.user.role !== 'admin') {
+        return res.redirect('/');
+    }
+    const tenantId = req.session.tenantId;
+    const salesReps = (tenantId && tenantData[tenantId]) ? (tenantData[tenantId].salesReps || []) : [];
+    res.render('salesrep', { salesReps });
+});
+
+app.post('/admin/salesrep/add', (req, res) => {
+    if (!req.session.loggedIn || req.session.user.role !== 'admin') {
+        return res.redirect('/');
+    }
+    const { name, commissionRate } = req.body;
+    if (!name || !name.trim()) {
+        return res.redirect('/admin/salesrep');
+    }
+    const tenantId = req.session.tenantId;
+    if (tenantId && tenantData[tenantId]) {
+        const store = tenantData[tenantId];
+        if (!store.salesReps) store.salesReps = [];
+        const highestId = store.salesReps.reduce((max, r) => r.id > max ? r.id : max, 0);
+        store.salesReps.push({ 
+            id: highestId + 1, 
+            name: name.trim(),
+            commissionRate: parseFloat(commissionRate) || 0
+        });
+        saveTenantData(tenantId);
+    }
+    res.redirect('/admin/salesrep');
+});
+
+app.post('/admin/salesrep/delete/:id', (req, res) => {
+    if (!req.session.loggedIn || req.session.user.role !== 'admin') {
+        return res.redirect('/');
+    }
+    const repId = parseInt(req.params.id);
+    const tenantId = req.session.tenantId;
+    if (tenantId && tenantData[tenantId]) {
+        const store = tenantData[tenantId];
+        store.salesReps = (store.salesReps || []).filter(r => r.id !== repId);
+        saveTenantData(tenantId);
+    }
+    res.redirect('/admin/salesrep');
+});
+
+app.get('/admin/salesrep/:id/report', (req, res) => {
+    if (!req.session.loggedIn || req.session.user.role !== 'admin') {
+        return res.redirect('/');
+    }
+    const repId = parseInt(req.params.id);
+    const tenantId = req.session.tenantId;
+    if (!tenantId || !tenantData[tenantId]) {
+        return res.redirect('/admin/salesrep');
+    }
+    const store = tenantData[tenantId];
+    const salesRep = (store.salesReps || []).find(r => r.id === repId);
+    if (!salesRep) {
+        return res.redirect('/admin/salesrep');
+    }
+
+    const now = new Date();
+    const days30 = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const days90 = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+    const days180 = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000);
+
+    // Commission rate from sales rep (default to 0 if not set)
+    const commissionRate = parseFloat(salesRep.commissionRate || 0) / 100;
+
+    // Collect all eligible invoices for this sales rep
+    // An invoice is eligible if:
+    // 1. The invoice itself has salesRepId matching this rep, OR
+    // 2. The customer has salesRepId matching this rep AND the invoice does NOT have a different salesRepId assigned
+    const eligibleInvoices = [];
+    const customers = store.users.filter(u => u.role === 'customer');
+
+    customers.forEach(customer => {
+        if (!customer.invoices || customer.invoices.length === 0) return;
+
+        customer.invoices.forEach(inv => {
+            // Check if this invoice is eligible for this sales rep
+            const invoiceSalesRepId = inv.salesRepId ? parseInt(inv.salesRepId) : null;
+            const customerSalesRepId = customer.salesRepId ? parseInt(customer.salesRepId) : null;
+
+            // Invoice is eligible if:
+            // - Invoice has this sales rep directly assigned, OR
+            // - Invoice has no sales rep assigned AND customer has this sales rep assigned
+            const isEligible = invoiceSalesRepId === repId || 
+                               (invoiceSalesRepId === null && customerSalesRepId === repId);
+
+            if (isEligible) {
+                eligibleInvoices.push({
+                    invoiceNumber: inv.invoiceNumber,
+                    customer: customer.company || customer.email,
+                    customerId: customer.id,
+                    dateCreated: inv.dateCreated || inv.date,
+                    totalAmount: parseFloat(inv.totalAmount || inv.total || 0),
+                    source: invoiceSalesRepId === repId ? 'invoice' : 'customer'
+                });
+            }
+        });
+    });
+
+    // Calculate totals for different time periods
+    let total30 = 0, total90 = 0, total180 = 0, totalAll = 0;
+    const invoiceDetails = eligibleInvoices.map(inv => {
+        const invDate = new Date(inv.dateCreated || 0);
+        const invTotal = inv.totalAmount;
+        
+        totalAll += invTotal;
+        if (invDate >= days30) total30 += invTotal;
+        if (invDate >= days90) total90 += invTotal;
+        if (invDate >= days180) total180 += invTotal;
+
+        return {
+            ...inv,
+            dateFormatted: invDate.toLocaleDateString('en-US'),
+            in30: invDate >= days30,
+            in90: invDate >= days90,
+            in180: invDate >= days180
+        };
+    });
+
+    // Sort invoices by date (most recent first)
+    invoiceDetails.sort((a, b) => new Date(b.dateCreated || 0) - new Date(a.dateCreated || 0));
+
+    // Calculate commissions
+    const commission30 = total30 * commissionRate;
+    const commission90 = total90 * commissionRate;
+    const commission180 = total180 * commissionRate;
+    const commissionAll = totalAll * commissionRate;
+
+    res.render('salesrep-report', { 
+        salesRep, 
+        invoiceDetails,
+        totals: {
+            total30: total30.toFixed(2),
+            total90: total90.toFixed(2),
+            total180: total180.toFixed(2),
+            totalAll: totalAll.toFixed(2)
+        },
+        commissions: {
+            commission30: commission30.toFixed(2),
+            commission90: commission90.toFixed(2),
+            commission180: commission180.toFixed(2),
+            commissionAll: commissionAll.toFixed(2)
+        },
+        commissionRate: (commissionRate * 100).toFixed(2)
+    });
+});
+// ==================== END SALES REPRESENTATIVES ====================
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

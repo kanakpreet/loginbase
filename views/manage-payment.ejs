@@ -1,37 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Payments</title>
     <!-- Add your CSS stylesheets or other head content here -->
     <style>
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+        }
+
+        .top-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .top-nav .nav-home {
+            background-color: #3498db;
+        }
+
+        .top-nav .nav-home:hover {
+            background-color: #2980b9;
+        }
+
+        .top-nav .nav-logout {
+            background-color: #e74c3c;
+        }
+
+        .top-nav .nav-logout:hover {
+            background-color: #c0392b;
+        }
+
         /* Add your custom CSS styles here */
         body {
             font-family: Arial, sans-serif;
         }
+
         h1 {
             color: blue;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #dddddd;
             padding: 8px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         .actions {
             margin-top: 20px;
         }
+
         .actions button {
             margin-right: 10px;
         }
+
         .btn-danger {
             background-color: #ff6666;
             color: white;
@@ -39,6 +82,7 @@
             padding: 8px 12px;
             cursor: pointer;
         }
+
         .btn-primary {
             background-color: #66b3ff;
             color: white;
@@ -47,9 +91,32 @@
             cursor: pointer;
             text-decoration: none;
         }
+
+        .paid-true {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .paid-false {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        tr.unpaid-row {
+            background-color: #ffeaea;
+        }
+
+        tr.paid-row {
+            background-color: #eafff0;
+        }
     </style>
 </head>
+
 <body>
+    <div class="top-nav">
+        <a href="/admin" class="nav-home">🏠 Home</a>
+        <a href="/logout" class="nav-logout">🔓 Logout</a>
+    </div>
     <div class="container">
         <h1>Manage Payments</h1>
         <table>
@@ -59,27 +126,43 @@
                     <th>Company Name</th>
                     <th>Date Created</th>
                     <th>Total Amount</th>
-                    <th>Status</th>
+                    <th>Total Balance</th>
+                    <th>Paid</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <% invoices.forEach(invoice => { %>
-                    <tr>
-                        <td><%= invoice.invoiceNumber %></td>
-                        <td><%= invoice.companyName %></td>
-                        <td><%= new Date(invoice.dateCreated).toDateString() %></td>
-                        <td>$<%= invoice.totalBalance.toFixed(2) %></td>
-                        <td><%= invoice.paid ? 'Paid' : 'Unpaid' %></td>
+                <% invoices.forEach(invoice=> { %>
+                    <tr class="<%= invoice.paid ? 'paid-row' : 'unpaid-row' %>">
+                        <td>
+                            <%= invoice.invoiceNumber %>
+                        </td>
+                        <td>
+                            <%= invoice.companyName %>
+                        </td>
+                        <td>
+                            <%= new Date(invoice.dateCreated).toDateString() %>
+                        </td>
+                        <td>$<%= (invoice.totalAmount || 0).toFixed(2) %>
+                        </td>
+                        <td>$<%= (invoice.totalBalance || 0).toFixed(2) %>
+                        </td>
+                        <td>
+                            <span class="<%= invoice.paid ? 'paid-true' : 'paid-false' %>">
+                                <%= invoice.paid ? 'True' : 'False' %>
+                            </span>
+                        </td>
                         <td>
                             <!-- Go to Invoice Button -->
-                            <a href="/admin/invoices/<%= invoice.invoiceNumber %>" class="btn btn-primary">Go to Invoice</a>
-                            
+                            <a href="/admin/invoices/<%= invoice.invoiceNumber %>" class="btn btn-primary">Go to
+                                Invoice</a>
+
                             <!-- Delete Button -->
-                            <button onclick="confirmDelete('<%= invoice.invoiceNumber %>')" class="btn btn-danger">Delete</button>
+                            <button onclick="confirmDelete('<%= invoice.invoiceNumber %>')"
+                                class="btn btn-danger">Delete</button>
                         </td>
                     </tr>
-                <% }); %>
+                    <% }); %>
             </tbody>
         </table>
         <div class="actions">
@@ -100,4 +183,5 @@
     </script>
     <!-- Add your scripts or other body content here -->
 </body>
+
 </html>

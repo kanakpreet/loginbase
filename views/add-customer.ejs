@@ -1,9 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Add Customer</title>
     <style>
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            
+        }
+
+        .top-nav a.nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+            display: inline-block;
+            margin: 0;
+        }
+
+        .top-nav .nav-home {
+            background-color: #3498db;
+        }
+
+        .top-nav .nav-home:hover {
+            background-color: #2980b9;
+        }
+
+        .top-nav .nav-logout {
+            background-color: #e74c3c;
+        }
+
+        .top-nav .nav-logout:hover {
+            background-color: #c0392b;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -11,19 +49,22 @@
             padding: 20px;
             min-height: 100vh;
         }
+
         .container {
             max-width: 600px;
             margin: 0 auto;
             background-color: white;
             padding: 30px;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         h1 {
             color: #333;
             text-align: center;
             margin-bottom: 30px;
         }
+
         .back-link {
             display: inline-block;
             margin-bottom: 20px;
@@ -33,19 +74,23 @@
             text-decoration: none;
             border-radius: 5px;
         }
+
         .back-link:hover {
             background-color: #5a6268;
         }
+
         form {
             display: flex;
             flex-direction: column;
         }
+
         label {
             margin-top: 15px;
             margin-bottom: 5px;
             font-weight: bold;
             color: #555;
         }
+
         input[type="text"],
         input[type="email"],
         input[type="password"],
@@ -57,6 +102,7 @@
             width: 100%;
             box-sizing: border-box;
         }
+
         input[type="text"]:focus,
         input[type="email"]:focus,
         input[type="password"]:focus,
@@ -64,6 +110,7 @@
             border-color: #007bff;
             outline: none;
         }
+
         button {
             margin-top: 25px;
             padding: 12px;
@@ -75,20 +122,28 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         button:hover {
             background-color: #218838;
         }
+
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
             }
+
             h1 {
                 font-size: 24px;
             }
         }
     </style>
 </head>
+
 <body>
+    <div class="top-nav">
+        <a href="/admin" class="nav-link nav-home">🏠 Home</a>
+        <a href="/logout" class="nav-link nav-logout">🔓 Logout</a>
+    </div>
     <div class="container">
         <a href="/admin/view-customers" class="back-link">Back to Customers</a>
         <h1>Add New Customer</h1>
@@ -133,8 +188,21 @@
                 <option value="No">No</option>
             </select>
 
+            <label for="salesRepId">Sales Representative:</label>
+            <select name="salesRepId" id="salesRepId">
+                <option value="">-- None --</option>
+                <% if (typeof salesReps !=='undefined' && salesReps.length> 0) { %>
+                    <% salesReps.forEach(rep=> { %>
+                        <option value="<%= rep.id %>">
+                            <%= rep.name %>
+                        </option>
+                        <% }); %>
+                            <% } %>
+            </select>
+
             <button type="submit">Add Customer</button>
         </form>
     </div>
 </body>
+
 </html>

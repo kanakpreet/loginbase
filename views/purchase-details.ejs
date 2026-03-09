@@ -1,50 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purchase Invoice</title>
     <link rel="stylesheet" href="/styles.css">
     <style>
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+        }
+
+        .top-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .top-nav .nav-home {
+            background-color: #3498db;
+        }
+
+        .top-nav .nav-home:hover {
+            background-color: #2980b9;
+        }
+
+        .top-nav .nav-logout {
+            background-color: #e74c3c;
+        }
+
+        .top-nav .nav-logout:hover {
+            background-color: #c0392b;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        table, th, td {
+        table,
+        th,
+        td {
             border: 1px solid black;
         }
 
-        th, td {
+        th,
+        td {
             padding: 8px;
             text-align: left;
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <body>
+    <div class="top-nav">
+        <a href="/admin" class="nav-home">🏠 Home</a>
+        <a href="/logout" class="nav-logout">🔓 Logout</a>
+    </div>
     <div class="container mt-4">
         <h1 class="mb-4">Purchase Invoice</h1>
         <form action="/admin/purchases/<%= purchase.PurchaseID %>" method="POST" id="purchaseForm">
             <div class="form-group">
                 <label for="vendorName">Vendor Name:</label>
-                <input type="text" class="form-control" id="vendorName" name="vendorName" value="<%= purchase.vendorName %>">
+                <input type="text" class="form-control" id="vendorName" name="vendorName"
+                    value="<%= purchase.vendorName %>">
             </div>
             <div class="form-group">
                 <label for="dateCreated">Date Created:</label>
-                <input type="date" class="form-control" id="dateCreated" name="dateCreated" value="<%= new Date(purchase.dateCreated).toISOString().split('T')[0] %>">
+                <input type="date" class="form-control" id="dateCreated" name="dateCreated"
+                    value="<%= new Date(purchase.dateCreated).toISOString().split('T')[0] %>">
             </div>
             <div class="form-group">
                 <label for="invoiceNumber">Invoice Number:</label>
-                <input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber" value="<%= purchase.invoiceNumber %>">
+                <input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber"
+                    value="<%= purchase.invoiceNumber %>">
             </div>
             <div class="form-group">
                 <label for="cashPaid">Cash Paid:</label>
-                <input type="number" class="form-control" id="cashPaid" name="cashPaid" value="<%= purchase.cashPaid %>" oninput="updateAccountBalance()">
+                <input type="number" class="form-control" id="cashPaid" name="cashPaid" value="<%= purchase.cashPaid %>"
+                    oninput="updateAccountBalance()">
             </div>
             <div class="form-group">
                 <label for="accountPaid">Account Paid:</label>
-                <input type="number" class="form-control" id="accountPaid" name="accountPaid" value="<%= purchase.accountPaid %>" oninput="updateAccountBalance()">
+                <input type="number" class="form-control" id="accountPaid" name="accountPaid"
+                    value="<%= purchase.accountPaid %>" oninput="updateAccountBalance()">
             </div>
 
             <h3>Products</h3>
@@ -61,36 +109,51 @@
                     </tr>
                 </thead>
                 <tbody id="productsTableBody">
-                    <% purchase.products.forEach((product, index) => { %>
+                    <% purchase.products.forEach((product, index)=> { %>
                         <tr>
-                            <td><%= index + 1 %></td>
-                            <td><%= product.productName %></td>
-                            <td><input type="number" class="form-control quantity" name="products[<%= index %>][quantity]" value="<%= product.quantity %>" data-index="<%= index %>" oninput="updateRowTotal(this)"></td>
-                            <td><input type="number" step="0.01" class="form-control rate" name="products[<%= index %>][rate]" value="<%= product.rate %>" data-index="<%= index %>" oninput="updateRowTotal(this)"></td>
-                            <td class="productTotal">$<%= (product.total || 0).toFixed(2) %></td>
                             <td>
-                                <select class="form-control autoPricing" name="products[<%= index %>][autoPricing]" data-index="<%= index %>">
+                                <%= index + 1 %>
+                            </td>
+                            <td>
+                                <%= product.productName %>
+                            </td>
+                            <td><input type="number" class="form-control quantity"
+                                    name="products[<%= index %>][quantity]" value="<%= product.quantity %>"
+                                    data-index="<%= index %>" oninput="updateRowTotal(this)"></td>
+                            <td><input type="number" step="0.01" class="form-control rate"
+                                    name="products[<%= index %>][rate]" value="<%= product.rate %>"
+                                    data-index="<%= index %>" oninput="updateRowTotal(this)"></td>
+                            <td class="productTotal">$<%= (product.total || 0).toFixed(2) %>
+                            </td>
+                            <td>
+                                <select class="form-control autoPricing" name="products[<%= index %>][autoPricing]"
+                                    data-index="<%= index %>">
                                     <option value="">Select Pricing</option>
-                                    <option value="autoPriceRetail" <%= product.autoPricing === 'autoPriceRetail' ? 'selected' : '' %>>Auto Price Retail</option>
-                                    <option value="vPackAutoPrice" <%= product.autoPricing === 'vPackAutoPrice' ? 'selected' : '' %>>V Pack Auto Price</option>
+                                    <option value="autoPriceRetail" <%=product.autoPricing==='autoPriceRetail'
+                                        ? 'selected' : '' %>>Auto Price Retail</option>
+                                    <option value="vPackAutoPrice" <%=product.autoPricing==='vPackAutoPrice'
+                                        ? 'selected' : '' %>>V Pack Auto Price</option>
                                 </select>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-danger btn-sm removeProduct" data-index="<%= index %>">Remove</button>
+                                <button type="button" class="btn btn-danger btn-sm removeProduct"
+                                    data-index="<%= index %>">Remove</button>
                             </td>
                         </tr>
-                    <% }); %>
+                        <% }); %>
                 </tbody>
             </table>
             <button type="button" class="btn btn-primary" id="addProductBtn">Add Product</button>
 
             <div class="form-group mt-4">
                 <label>Invoice Total:</label>
-                <div id="invoiceTotal">$<%= (purchase.invoiceTotal || 0).toFixed(2) %></div>
+                <div id="invoiceTotal">$<%= (purchase.invoiceTotal || 0).toFixed(2) %>
+                </div>
             </div>
             <div class="form-group">
                 <label>Account Balance:</label>
-                <div id="accountBalance">$<%= (purchase.accountBalance || 0).toFixed(2) %></div>
+                <div id="accountBalance">$<%= (purchase.accountBalance || 0).toFixed(2) %>
+                </div>
             </div>
 
             <button type="submit" class="btn btn-success">Submit</button>
@@ -98,7 +161,7 @@
     </div>
 
     <script>
-        const inventory = <%- JSON.stringify(inventory) %>;
+        const inventory = <% - JSON.stringify(inventory) %>;
 
         function roundToNearestQuarter(value) {
             return (Math.round(value * 4) / 4).toFixed(2);
@@ -123,7 +186,7 @@
         function addProductRow() {
             const newIndex = $('#productsTableBody tr').length;
             const productDropdown = $('<select class="form-control" name="products[' + newIndex + '][productName]"></select>');
-            
+
             inventory.forEach(item => {
                 const option = $('<option></option>').attr('value', item.itemName).text(item.itemName);
                 productDropdown.append(option);
@@ -144,7 +207,7 @@
         }
 
         function updateRowIndices() {
-            $('#productsTableBody tr').each(function(index) {
+            $('#productsTableBody tr').each(function (index) {
                 $(this).find('td:first').text(index + 1);
             });
         }
@@ -166,7 +229,7 @@
 
         function updateInvoiceTotal() {
             let invoiceTotal = 0;
-            $('#productsTableBody tr').each(function() {
+            $('#productsTableBody tr').each(function () {
                 const total = parseFloat($(this).find('.productTotal').text().replace('$', '')) || 0;
                 invoiceTotal += total;
             });
@@ -182,11 +245,11 @@
             $('#accountBalance').text('$' + accountBalance.toFixed(2));
         }
 
-        $('#purchaseForm').on('submit', function(event) {
+        $('#purchaseForm').on('submit', function (event) {
             event.preventDefault();
 
             const products = [];
-            $('#productsTableBody tr').each(function() {
+            $('#productsTableBody tr').each(function () {
                 const productName = $(this).find('select[name^="products["]').val();
                 const quantity = parseFloat($(this).find('input[name$="[quantity]"]').val()) || 0;
                 const rate = parseFloat($(this).find('input[name$="[rate]"]').val()) || 0;
@@ -210,14 +273,14 @@
             formData.push({ name: 'products', value: productsString });
 
             // Send the data to the server
-            $.post($(this).attr('action'), $.param(formData), function(response) {
+            $.post($(this).attr('action'), $.param(formData), function (response) {
                 window.location.href = response.redirectUrl || '/admin/purchases';
             });
         });
 
         $(document).on('input', '.quantity, .rate', updateRowTotal);
 
-        $(document).on('change', '.autoPricing', function() {
+        $(document).on('change', '.autoPricing', function () {
             const index = $(this).data('index');
             const productName = $('[name="products[' + index + '][productName]"]').val();
             const selectedProduct = inventory.find(item => item.itemName === productName);
@@ -235,7 +298,7 @@
             updateRowTotal($('[name="products[' + index + '][rate]"]'));
         });
 
-        $(document).on('click', '.removeProduct', function() {
+        $(document).on('click', '.removeProduct', function () {
             removeProductRow(this);
         });
 
@@ -247,4 +310,5 @@
         updateInvoiceTotal();
     </script>
 </body>
+
 </html>

@@ -1,20 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Add Inventory Item</title>
     <style>
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            
+        }
+
+        .top-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .top-nav .nav-home {
+            background-color: #3498db;
+        }
+
+        .top-nav .nav-home:hover {
+            background-color: #2980b9;
+        }
+
+        .top-nav .nav-logout {
+            background-color: #e74c3c;
+        }
+
+        .top-nav .nav-logout:hover {
+            background-color: #c0392b;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f8ff;
             margin: 0;
             padding: 0;
         }
+
         h1 {
             text-align: center;
             color: #333;
             margin-top: 20px;
         }
+
         form {
             max-width: 600px;
             margin: 20px auto;
@@ -23,12 +61,14 @@
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
+
         label {
             font-weight: bold;
             display: inline-block;
             width: 150px;
             margin-top: 10px;
         }
+
         input[type="text"],
         input[type="number"],
         input[type="file"],
@@ -41,9 +81,11 @@
             border-radius: 4px;
             display: inline-block;
         }
+
         .price-input {
             width: calc(70% - 160px);
         }
+
         button {
             background-color: #007bff;
             color: white;
@@ -53,9 +95,11 @@
             cursor: pointer;
             margin-top: 10px;
         }
+
         button:hover {
             background-color: #0069d9;
         }
+
         a {
             text-decoration: none;
             color: #007bff;
@@ -63,9 +107,11 @@
             text-align: center;
             margin-top: 20px;
         }
+
         a:hover {
             color: #0056b3;
         }
+
         .form-buttons {
             text-align: center;
             margin-top: 20px;
@@ -80,7 +126,7 @@
                 document.getElementById('priceLevel3').value = (1.30 * cost + 1).toFixed(2);
             }
         }
-        
+
         function vPackAutoPrice() {
             const cost = parseFloat(document.getElementById('cost').value);
             if (!isNaN(cost)) {
@@ -91,7 +137,12 @@
         }
     </script>
 </head>
+
 <body>
+    <div class="top-nav">
+        <a href="/admin" class="nav-home">🏠 Home</a>
+        <a href="/logout" class="nav-logout">🔓 Logout</a>
+    </div>
     <h1>Add Inventory Item</h1>
     <form action="/admin/add-inventory" method="post" enctype="multipart/form-data">
         <label for="itemName">Item Name:</label>
@@ -129,11 +180,12 @@
 
         <label for="image">Image:</label>
         <input type="file" id="image" name="image"><br>
-        
+
         <div class="form-buttons">
             <button type="submit">Add Item</button>
         </div>
     </form>
     <a href="/admin/view-inventory">Back to Inventory List</a>
 </body>
+
 </html>
