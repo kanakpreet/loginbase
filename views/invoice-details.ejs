@@ -1421,19 +1421,18 @@
                     dropdown.innerHTML = '<div class="product-picker-no-results">No products found</div>';
                 } else {
                     dropdown.innerHTML = filtered.map(item => `
-            < div class="product-picker-item" data - value="${escapeAttr(item.itemName)}" data - category="${escapeAttr(item.itemCategory || '')}" data - price="${item['priceLevel' + customerPriceLevel] || 0}" >
-                ${
-                item.imageUrl ?
-                    `<img src="${escapeAttr(item.imageUrl)}" alt="${escapeAttr(item.itemName)}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="product-picker-item" data-value="${escapeAttr(item.itemName)}" data-category="${escapeAttr(item.itemCategory || '')}" data-price="${item['priceLevel' + customerPriceLevel] || 0}">
+                            ${item.imageUrl ?
+                                `<img src="${escapeAttr(item.imageUrl)}" alt="${escapeAttr(item.itemName)}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                  <div class="no-image" style="display:none;">📦</div>` :
-                    '<div class="no-image">📦</div>'
-            }
-            <div class="product-info">
-                <div class="product-name">${escapeHtml(item.itemName)}</div>
-                <div class="product-details">Stock: ${item.quantity || 0} | $${(item['priceLevel' + customerPriceLevel] || 0).toFixed(2)}</div>
-            </div>
-                        </div >
-                `).join('');
+                                '<div class="no-image">📦</div>'
+                            }
+                            <div class="product-info">
+                                <div class="product-name">${escapeHtml(item.itemName)}</div>
+                                <div class="product-details">Stock: ${item.quantity || 0} | $${(item['priceLevel' + customerPriceLevel] || 0).toFixed(2)}</div>
+                            </div>
+                        </div>
+                    `).join('');
                 }
 
                 dropdown.querySelectorAll('.product-picker-item').forEach(el => {
@@ -1455,7 +1454,7 @@
                             updateProductTotal(rowIndex);
                             
                             // Also update mobile card if exists
-                            const card = document.querySelector(`.mobile - products.product - card[data - index='${rowIndex}']`);
+                            const card = document.querySelector(`.mobile-products .product-card[data-index='${rowIndex}']`);
                             if (card) {
                                 card.querySelector('.card-title').textContent = value;
                                 card.querySelector('.mobile-category').textContent = category || '-';
@@ -1517,21 +1516,21 @@
             const newRow = document.createElement('tr');
             newRow.dataset.index = rowCount;
             newRow.innerHTML = `
-                < td >
-                <div class="product-picker" id="picker-${pickerId}">
-                    <input type="text" class="product-picker-input" placeholder="Search product..." autocomplete="off">
+                <td>
+                    <div class="product-picker" id="picker-${pickerId}">
+                        <input type="text" class="product-picker-input" placeholder="Search product..." autocomplete="off">
                         <input type="hidden" name="productName" value="">
-                            <div class="product-picker-dropdown"></div>
-                        </div>
-                    </td>
-                    <td><input type="text" name="productCategory" data-index="${rowCount}" class="productCategory" readonly></td>
-                    <td><input type="number" name="quantity" value="1" step="any" oninput="updateProductTotal(${rowCount})"></td>
-                    <td><input type="number" name="rate" value="0.00" step="any" oninput="updateProductTotal(${rowCount})"></td>
-                    <td><input type="number" name="palletQty" value="" step="any" placeholder="" oninput="updateTotalPalletCount()"></td>
-                    <td class="total">0.00</td>
-                    <td><button type="button" class="delete-btn" onclick="deleteProduct(${rowCount})">Delete</button></td>
-                    `;
-                    tbody.appendChild(newRow);
+                        <div class="product-picker-dropdown"></div>
+                    </div>
+                </td>
+                <td><input type="text" name="productCategory" data-index="${rowCount}" class="productCategory" readonly></td>
+                <td><input type="number" name="quantity" value="1" step="any" oninput="updateProductTotal(${rowCount})"></td>
+                <td><input type="number" name="rate" value="0.00" step="any" oninput="updateProductTotal(${rowCount})"></td>
+                <td><input type="number" name="palletQty" value="" step="any" placeholder="" oninput="updateTotalPalletCount()"></td>
+                <td class="total">0.00</td>
+                <td><button type="button" class="delete-btn" onclick="deleteProduct(${rowCount})">Delete</button></td>
+            `;
+            tbody.appendChild(newRow);
 
                     // Add mobile product card
                     const newCard = document.createElement('div');

@@ -38,42 +38,7 @@
       "taxable": true,
       "salesRepId": null,
       "role": "customer",
-      "invoices": [
-        {
-          "invoiceNumber": "H01",
-          "companyName": "hb",
-          "addressLine1": "h",
-          "addressLine2": "h",
-          "city": "h",
-          "state": "h",
-          "zipCode": "h",
-          "dateCreated": "2026-03-06",
-          "products": [
-            {
-              "productName": "Paper Bags 1/6 BBL 500/Case",
-              "productCategory": "Paper Bags",
-              "quantity": 1,
-              "rate": 31,
-              "total": 31
-            },
-            {
-              "productName": "Paper Bags 10x5x13 Twisted Handle",
-              "productCategory": "Paper Bags",
-              "quantity": 1,
-              "rate": 20,
-              "total": 20
-            }
-          ],
-          "subtotal": 51,
-          "salesTax": 0,
-          "totalAmount": 51,
-          "totalBalance": 51,
-          "paid": false,
-          "picked": false,
-          "CashPayment": 0,
-          "AccountPayment": 0
-        }
-      ]
+      "invoices": []
     }
   ],
   "inventory": [
@@ -196,7 +161,7 @@
       "itemName": "Paper Bags 1/6 BBL 500/Case",
       "itemCategory": "Paper Bags",
       "cost": 24,
-      "quantity": 153,
+      "quantity": 154,
       "priceLevel1": 31,
       "priceLevel2": 32.75,
       "priceLevel3": 37.5,
@@ -258,7 +223,7 @@
       "priceLevel3": 26.5,
       "imageUrl": "/uploads/37.jpg",
       "rank": 9,
-      "quantity": 4,
+      "quantity": 5,
       "vendors": null,
       "length": 0,
       "width": 0,
@@ -5661,5 +5626,11 @@
       "Rank": 32
     }
   ],
-  "salesReps": []
+  "salesReps": [
+    {
+      "id": 1,
+      "name": "Jenil",
+      "commissionRate": 5
+    }
+  ]
 }

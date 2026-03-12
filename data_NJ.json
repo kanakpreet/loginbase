@@ -17039,41 +17039,14 @@
           "city": "Palisades Park",
           "state": "NJ",
           "zipCode": "07650",
-          "dateCreated": "2026-03-02",
-          "products": [
-            {
-              "productName": "12\" x 1000' Aluminum Foil Roll Standard Duty",
-              "productCategory": "Aluminum Foil Roll",
-              "quantity": 528,
-              "rate": 15,
-              "total": 7920
-            }
-          ],
-          "subtotal": 7920,
-          "salesTax": 0,
-          "totalAmount": 7920,
-          "totalBalance": 7920,
-          "paid": false,
-          "picked": false,
-          "CashPayment": 0,
-          "AccountPayment": 0
-        },
-        {
-          "invoiceNumber": "APP51",
-          "companyName": "ACE Paper Products",
-          "addressLine1": "21 Grand Ave",
-          "addressLine2": "#211",
-          "city": "Palisades Park",
-          "state": "NJ",
-          "zipCode": "07650",
           "dateCreated": "2026-03-09",
           "products": [
             {
               "productName": "Paper Bags 10x7x12 Twisted Handle",
               "productCategory": "Paper Bags",
               "quantity": 50,
-              "rate": 21,
-              "total": 1050
+              "rate": 20,
+              "total": 1000
             },
             {
               "productName": "Paper Bags 13x7x17 Twisted Handle",
@@ -17083,14 +17056,45 @@
               "total": 1421
             }
           ],
-          "subtotal": 2471,
+          "subtotal": 2421,
           "salesTax": 0,
-          "totalAmount": 2471,
-          "totalBalance": 2471,
+          "totalAmount": 2421,
+          "totalBalance": 2421,
           "paid": false,
           "picked": false,
           "CashPayment": 0,
-          "AccountPayment": 0
+          "AccountPayment": 0,
+          "notes": "",
+          "salesRepId": null
+        },
+        {
+          "invoiceNumber": "APP51",
+          "companyName": "ACE Paper Products",
+          "addressLine1": "21 Grand Ave",
+          "addressLine2": "#211",
+          "city": "Palisades Park",
+          "state": "NJ",
+          "zipCode": "07650",
+          "dateCreated": "2026-03-10",
+          "products": [
+            {
+              "productName": "18\" x 500' Aluminum Foil Roll Heavy Duty",
+              "productCategory": "Aluminum Foil Roll",
+              "quantity": 198,
+              "rate": 14,
+              "total": 2772
+            }
+          ],
+          "subtotal": 2772,
+          "salesTax": 0,
+          "totalAmount": 2772,
+          "totalBalance": 2772,
+          "paid": false,
+          "picked": false,
+          "CashPayment": 0,
+          "AccountPayment": 0,
+          "notes": "",
+          "salesRepId": null
         }
       ],
       "taxable": false
@@ -38362,7 +38366,8 @@
           "picked": true,
           "CashPayment": 0,
           "AccountPayment": 0,
-          "notes": ""
+          "notes": "",
+          "salesRepId": 1
         },
         {
           "invoiceNumber": "C244",
@@ -38397,7 +38402,8 @@
           "picked": true,
           "CashPayment": 0,
           "AccountPayment": 0,
-          "notes": ""
+          "notes": "",
+          "salesRepId": 1
         },
         {
           "invoiceNumber": "C245",
@@ -64623,6 +64629,119 @@
           "AccountPayment": 1897,
           "notes": "Zelle BOFA",
           "picked": true
+        },
+        {
+          "invoiceNumber": "IEC03",
+          "companyName": "Indian Express Cuisine",
+          "addressLine1": "58 Gardiners Ave",
+          "addressLine2": "",
+          "city": "Levittown",
+          "state": "NY",
+          "zipCode": "11756",
+          "dateCreated": "2026-03-12",
+          "products": [
+            {
+              "productName": "Paper Bags 10x5x13 Twisted Handle",
+              "productCategory": "Paper Bags",
+              "quantity": 30,
+              "rate": 21,
+              "total": 630
+            },
+            {
+              "productName": "12\" x 1000' Aluminum Foil Roll Standard Duty",
+              "productCategory": "Aluminum Foil Roll",
+              "quantity": 15,
+              "rate": 15,
+              "total": 225
+            },
+            {
+              "productName": "Starco So-Kleen Green Dish Pot and Pan Cleaner 4 Gallon",
+              "productCategory": "Janitorial",
+              "quantity": 2,
+              "rate": 16,
+              "total": 32
+            },
+            {
+              "productName": "Starco So-Kleen Oven Cleaner 4 Gallon",
+              "productCategory": "Janitorial",
+              "quantity": 2,
+              "rate": 17.5,
+              "total": 35
+            },
+            {
+              "productName": "18\" x 500' Aluminum Foil Roll Heavy Duty",
+              "productCategory": "Aluminum Foil Roll",
+              "quantity": 15,
+              "rate": 15,
+              "total": 225
+            },
+            {
+              "productName": "Aluminum Half Size Deep Pan 30g",
+              "productCategory": "Aluminum Pans",
+              "quantity": 1,
+              "rate": 25,
+              "total": 25
+            },
+            {
+              "productName": "98mm PET Cup Flat Lids (1000pcs)",
+              "productCategory": "Plastic PET Cups",
+              "quantity": 1,
+              "rate": 15.5,
+              "total": 15.5
+            },
+            {
+              "productName": "Plenty Kitchen Towel 2 Ply Flex-A-Size 15 Rolls",
+              "productCategory": "Paper Towels",
+              "quantity": 3,
+              "rate": 12,
+              "total": 36
+            },
+            {
+              "productName": "Dinner Napkin 2 Ply 3000/Case",
+              "productCategory": "Paper Towels",
+              "quantity": 2,
+              "rate": 25,
+              "total": 50
+            },
+            {
+              "productName": "Vynl Powder Free Gloves Large",
+              "productCategory": "Gloves",
+              "quantity": 2,
+              "rate": 15.75,
+              "total": 31.5
+            },
+            {
+              "productName": "Starco Bleach 4 Gallon",
+              "productCategory": "Janitorial",
+              "quantity": 2,
+              "rate": 10.5,
+              "total": 21
+            },
+            {
+              "productName": "Import 8 oz Soup Container 240pc Combo",
+              "productCategory": "Plastic Containers",
+              "quantity": 3,
+              "rate": 20,
+              "total": 60
+            },
+            {
+              "productName": "Import 16 oz Soup Container  240pc Combo",
+              "productCategory": "Plastic Containers",
+              "quantity": 2,
+              "rate": 23,
+              "total": 46
+            }
+          ],
+          "subtotal": 1552,
+          "salesTax": 0,
+          "totalAmount": 1552,
+          "totalBalance": 1552,
+          "paid": false,
+          "picked": false,
+          "CashPayment": 0,
+          "AccountPayment": 0,
+          "notes": "",
+          "salesRepId": null
         }
       ]
     },
@@ -72191,6 +72310,52 @@
           "CashPayment": 0,
           "AccountPayment": 0,
           "notes": ""
+        },
+        {
+          "invoiceNumber": "ECP26",
+          "companyName": "East Coast Paper",
+          "addressLine1": "3500 Hampton Rd",
+          "addressLine2": "",
+          "city": "Oceanside",
+          "state": "NY",
+          "zipCode": "11572",
+          "dateCreated": "2026-03-11",
+          "products": [
+            {
+              "productName": "Aluminum Oblong Pan 2.25lb (500pcs)",
+              "productCategory": "Aluminum Pans",
+              "quantity": 20,
+              "rate": 45,
+              "total": 900,
+              "palletQty": 0.5
+            },
+            {
+              "productName": "Aluminum Full Size Medium Pan 96g",
+              "productCategory": "Aluminum Pans",
+              "quantity": 14,
+              "rate": 35,
+              "total": 490,
+              "palletQty": 0.5
+            },
+            {
+              "productName": "Aluminum Full Size Deep Pan 100-110g",
+              "productCategory": "Aluminum Pans",
+              "quantity": 126,
+              "rate": 36,
+              "total": 4536,
+              "palletQty": 3
+            }
+          ],
+          "subtotal": 5926,
+          "salesTax": 0,
+          "totalAmount": 5926,
+          "totalBalance": 5926,
+          "paid": false,
+          "picked": false,
+          "CashPayment": 0,
+          "AccountPayment": 0,
+          "notes": "",
+          "salesRepId": null
         }
       ]
     },
@@ -78021,6 +78186,47 @@
           "CashPayment": 0,
           "AccountPayment": 236,
           "notes": "picked up, kept outside Zelle BOFA"
+        },
+        {
+          "invoiceNumber": "RWC13",
+          "companyName": "Reem Wholesale Co.",
+          "addressLine1": "27 East ",
+          "addressLine2": "",
+          "city": "Clifton",
+          "state": "NJ",
+          "zipCode": "07011",
+          "dateCreated": "2026-03-12",
+          "products": [
+            {
+              "productName": "Aluminum Oblong Pan 4 lb (250pcs)",
+              "productCategory": "Aluminum Pans",
+              "quantity": 2,
+              "rate": 56,
+              "total": 112
+            },
+            {
+              "productName": "Aluminum Oblong Pan 4lb Dome Lid",
+              "productCategory": "Aluminum Pans",
+              "quantity": 2,
+              "rate": 38,
+              "total": 76
+            },
+            {
+              "productName": "Aluminum Half Size Lids",
+              "productCategory": "Aluminum Pans",
+              "quantity": 1,
+              "rate": 18,
+              "total": 18
+            }
+          ],
+          "subtotal": 206,
+          "salesTax": 0,
+          "totalAmount": 206,
+          "totalBalance": 206,
+          "paid": false,
+          "picked": false,
+          "CashPayment": 0,
+          "AccountPayment": 0
         }
       ]
     },
@@ -89837,9 +90043,12 @@
           "paid": false,
           "picked": true,
           "CashPayment": 0,
-          "AccountPayment": 0
+          "AccountPayment": 0,
+          "notes": "",
+          "salesRepId": 1
         }
-      ]
+      ],
+      "salesRepId": 1
     },
     {
       "id": 129,
@@ -90576,6 +90785,98 @@
           "CashPayment": 0,
           "AccountPayment": 0,
           "notes": ""
+        },
+        {
+          "invoiceNumber": "EVR06",
+          "companyName": "El Vesubio Restaurant",
+          "addressLine1": "442 62nd Street",
+          "addressLine2": "",
+          "city": "West Newyork",
+          "state": "NJ",
+          "zipCode": "07093",
+          "dateCreated": "2026-03-10",
+          "products": [
+            {
+              "productName": "Aluminum Full Size Deep Pan 100-110g",
+              "productCategory": "Aluminum Pans",
+              "quantity": 5,
+              "rate": 38,
+              "total": 190
+            },
+            {
+              "productName": "Aluminum Half Size Deep Pan 30g",
+              "productCategory": "Aluminum Pans",
+              "quantity": 3,
+              "rate": 25,
+              "total": 75
+            },
+            {
+              "productName": "Aluminum Half Size Lids",
+              "productCategory": "Aluminum Pans",
+              "quantity": 3,
+              "rate": 18,
+              "total": 54
+            },
+            {
+              "productName": "PP Hinged Container PP206 9\"x6\"x3 150pcs",
+              "productCategory": "Plastic PP Container",
+              "quantity": 10,
+              "rate": 12.5,
+              "total": 125
+            },
+            {
+              "productName": "Import 8 oz Soup Container 240pc Combo",
+              "productCategory": "Plastic Containers",
+              "quantity": 6,
+              "rate": 20,
+              "total": 120
+            },
+            {
+              "productName": "Import 16 oz Soup Container  240pc Combo",
+              "productCategory": "Plastic Containers",
+              "quantity": 6,
+              "rate": 23,
+              "total": 138
+            },
+            {
+              "productName": "Import 32 oz Soup Container  240pc Combo",
+              "productCategory": "Plastic Containers",
+              "quantity": 2,
+              "rate": 33,
+              "total": 66
+            },
+            {
+              "productName": "16 oz PET Cup (1000pcs)",
+              "productCategory": "Plastic PET Cups",
+              "quantity": 1,
+              "rate": 38.5,
+              "total": 38.5
+            },
+            {
+              "productName": "98mm PET Cup Flat Lids (1000pcs)",
+              "productCategory": "Plastic PET Cups",
+              "quantity": 1,
+              "rate": 15.5,
+              "total": 15.5
+            },
+            {
+              "productName": "18\" x 500' Aluminum Foil Roll Heavy Duty",
+              "productCategory": "Aluminum Foil Roll",
+              "quantity": 1,
+              "rate": 15,
+              "total": 15
+            }
+          ],
+          "subtotal": 837,
+          "salesTax": 0,
+          "totalAmount": 837,
+          "totalBalance": 837,
+          "paid": false,
+          "picked": false,
+          "CashPayment": 0,
+          "AccountPayment": 0,
+          "notes": "",
+          "salesRepId": null
         }
       ]
     },
@@ -90764,20 +91065,11 @@
       "priceLevel3": 24,
       "imageUrl": "/uploads/2.jpg",
       "rank": 1,
-      "quantity": 2335,
+      "quantity": 2848,
       "vendors": [
         {
           "name": "Import",
           "price": 8.8
-        },
-        {
-          "name": "PJP",
-          "price": 10
-        },
-        {
-          "name": "[object Object]",
-          "price": 15,
-          "lastPurchased": "2025-01-01"
         }
       ],
       "length": 0,
@@ -90816,7 +91108,7 @@
       "priceLevel3": 22,
       "imageUrl": "/uploads/3.jpg",
       "rank": 3,
-      "quantity": 578,
+      "quantity": 364,
       "vendors": [
         {
           "name": "Import",
@@ -90935,7 +91227,7 @@
       "priceLevel3": 26.5,
       "imageUrl": "/uploads/37.jpg",
       "rank": 9,
-      "quantity": 508,
+      "quantity": 478,
       "vendors": null,
       "length": 0,
       "width": 0,
@@ -91908,7 +92200,7 @@
       "priceLevel3": 35,
       "imageUrl": "/uploads/18.jpg",
       "rank": 59,
-      "quantity": 767,
+      "quantity": 763,
       "vendors": null,
       "length": 0,
       "width": 0,
@@ -91946,7 +92238,7 @@
       "priceLevel3": 26,
       "imageUrl": "/uploads/19.jpg",
       "rank": 61,
-      "quantity": 80,
+      "quantity": 76,
       "vendors": null,
       "length": 0,
       "width": 0,
@@ -91979,7 +92271,7 @@
       "itemName": "Aluminum Full Size Medium Pan 96g",
       "itemCategory": "Aluminum Pans",
       "cost": 29,
-      "quantity": 46,
+      "quantity": 32,
       "priceLevel1": 37,
       "priceLevel2": 38,
       "priceLevel3": 49,
@@ -92017,7 +92309,7 @@
       "itemName": "Aluminum Full Size Deep Pan 100-110g",
       "itemCategory": "Aluminum Pans",
       "cost": 30,
-      "quantity": 295,
+      "quantity": 164,
       "priceLevel1": 36,
       "priceLevel2": 38,
       "priceLevel3": 49,
@@ -92189,7 +92481,7 @@
       "itemCategory": "Aluminum Pans",
       "cost": 27,
       "rank": 74,
-      "quantity": 389,
+      "quantity": 369,
       "priceLevel1": 44,
       "priceLevel2": 45,
       "priceLevel3": 49.5,
@@ -92227,7 +92519,7 @@
       "itemCategory": "Aluminum Pans",
       "cost": 34,
       "rank": 76,
-      "quantity": 129,
+      "quantity": 127,
       "priceLevel1": 54,
       "priceLevel2": 56,
       "priceLevel3": 60,
@@ -92252,7 +92544,7 @@
       "itemCategory": "Aluminum Pans",
       "cost": 30,
       "rank": 77,
-      "quantity": 8,
+      "quantity": 6,
       "priceLevel1": 35,
       "priceLevel2": 38,
       "priceLevel3": 38,
@@ -92350,7 +92642,7 @@
       "priceLevel3": 48.5,
       "imageUrl": "/uploads/89.jpg",
       "rank": 82,
-      "quantity": 624,
+      "quantity": 623,
       "vendors": null,
       "length": 0,
       "width": 0,
@@ -92440,7 +92732,7 @@
       "itemName": "98mm PET Cup Flat Lids (1000pcs)",
       "itemCategory": "Plastic PET Cups",
       "cost": 9,
-      "quantity": 840,
+      "quantity": 838,
       "priceLevel1": 14.5,
       "priceLevel2": 15.5,
       "priceLevel3": 21.5,
@@ -92515,10 +92807,10 @@
       "id": 313,
       "itemName": "Toilet Roll 2 Ply 96 Rolls ",
       "itemCategory": "Paper Towels",
-      "cost": 23,
-      "priceLevel1": 29,
-      "priceLevel2": 30,
-      "priceLevel3": 32,
+      "cost": 27,
+      "priceLevel1": 30,
+      "priceLevel2": 31.5,
+      "priceLevel3": 36,
       "imageUrl": "/uploads/image-1728327372941.jpeg",
       "rank": 91,
       "quantity": 0,
@@ -92540,7 +92832,7 @@
       "priceLevel3": 15,
       "imageUrl": "/uploads/60.jpg",
       "rank": 92,
-      "quantity": 89,
+      "quantity": 86,
       "vendors": null,
       "length": 0,
       "width": 0,
@@ -92672,7 +92964,7 @@
       "priceLevel3": 37.5,
       "imageUrl": "/uploads/56.jpg",
       "rank": 99,
-      "quantity": 113,
+      "quantity": 111,
       "vendors": null,
       "length": 0,
       "width": 0,
@@ -92743,7 +93035,7 @@
       "itemName": "PP Hinged Container PP206 9\"x6\"x3 150pcs",
       "itemCategory": "Plastic PP Container",
       "cost": 10.5,
-      "quantity": 624,
+      "quantity": 614,
       "priceLevel1": 12,
       "priceLevel2": 12.5,
       "priceLevel3": 19.5,
@@ -92900,7 +93192,7 @@
       "itemCategory": "Gloves",
       "cost": 13.25,
       "rank": 111,
-      "quantity": 168,
+      "quantity": 166,
       "priceLevel1": 14.75,
       "priceLevel2": 15.75,
       "priceLevel3": 18.25,
@@ -93018,7 +93310,7 @@
       "priceLevel3": 23,
       "imageUrl": "/uploads/65.jpg",
       "rank": 117,
-      "quantity": 47,
+      "quantity": 38,
       "vendors": null,
       "length": 0,
       "width": 0,
@@ -93055,7 +93347,7 @@
       "priceLevel3": 24.5,
       "imageUrl": "/uploads/67.jpg",
       "rank": 119,
-      "quantity": 364,
+      "quantity": 356,
       "vendors": null,
       "length": 0,
       "width": 0,
@@ -93074,7 +93366,7 @@
       "priceLevel3": 38,
       "imageUrl": "/uploads/68.jpg",
       "rank": 120,
-      "quantity": 79,
+      "quantity": 77,
       "vendors": null,
       "length": 0,
       "width": 0,
@@ -93382,24 +93674,6 @@
       "taxableItem": false
     },
     {
-      "id": 121,
-      "itemName": "Import 28 oz White Rectangle Container",
-      "itemCategory": "Plastic Containers",
-      "cost": 15,
-      "quantity": 0,
-      "priceLevel1": 16.75,
-      "priceLevel2": 17.75,
-      "priceLevel3": 20.5,
-      "rank": 137,
-      "imageUrl": "/uploads/image-1720042699155.jpg",
-      "vendors": null,
-      "length": 0,
-      "width": 0,
-      "height": 0,
-      "weight": 0,
-      "palletqty": 0
-    },
-    {
       "id": 122,
       "itemName": "Import 32 oz White Rectangle Container",
       "itemCategory": "Plastic Containers",
@@ -93408,8 +93682,26 @@
       "priceLevel1": 19,
       "priceLevel2": 20,
       "priceLevel3": 23,
-      "rank": 138,
+      "rank": 137,
       "imageUrl": "/uploads/image-1720042740067.jpg",
+      "vendors": null,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "weight": 0,
+      "palletqty": 0
+    },
+    {
+      "id": 121,
+      "itemName": "Import 28 oz White Rectangle Container",
+      "itemCategory": "Plastic Containers",
+      "cost": 15,
+      "quantity": 0,
+      "priceLevel1": 16.75,
+      "priceLevel2": 17.75,
+      "priceLevel3": 20.5,
+      "rank": 138,
+      "imageUrl": "/uploads/image-1720042699155.jpg",
       "vendors": null,
       "length": 0,
       "width": 0,
@@ -94981,7 +95273,7 @@
       "priceLevel3": 12.5,
       "imageUrl": "/uploads/image-1719456487291.jpeg",
       "rank": 221,
-      "quantity": 50,
+      "quantity": 48,
       "vendors": null,
       "length": 0,
       "width": 0,
@@ -95019,7 +95311,7 @@
       "priceLevel3": 19.25,
       "imageUrl": "/uploads/image-1719456614910.jpg",
       "rank": 223,
-      "quantity": 27,
+      "quantity": 25,
       "vendors": null,
       "length": 0,
       "width": 0,
@@ -95094,7 +95386,7 @@
       "priceLevel3": 21,
       "imageUrl": "/uploads/image-1719456651329.jpg",
       "rank": 227,
-      "quantity": 23,
+      "quantity": 21,
       "vendors": null,
       "length": 0,
       "width": 0,
@@ -95788,8 +96080,8 @@
       "cost": 120,
       "quantity": 123,
       "priceLevel1": 275,
-      "priceLevel2": 275,
-      "priceLevel3": 275,
+      "priceLevel2": 300,
+      "priceLevel3": 300,
       "rank": 265,
       "imageUrl": "/uploads/image-1719456881263.jpg",
       "vendors": null,
@@ -104501,7 +104793,8 @@
   "salesReps": [
     {
       "id": 1,
-      "name": "Jenil"
+      "name": "Jenil",
+      "commissionRate": 3
     }
   ]
 }
