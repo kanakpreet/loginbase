@@ -5,40 +5,247 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Customer</title>
-    <link rel="stylesheet" href="/path/to/your/css/style.css">
+    <!-- Use Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --secondary-color: #64748b;
+            --secondary-hover: #475569;
+            --danger-color: #ef4444;
+            --danger-hover: #dc2626;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --input-focus-ring: rgba(59, 130, 246, 0.4);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
         .top-nav {
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            gap: 10px;
-            padding: 10px 20px;
+            gap: 15px;
+            padding: 15px 30px;
+            background-color: var(--card-bg);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         .top-nav a {
             color: white;
             text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 5px;
+            padding: 8px 18px;
+            border-radius: 8px;
             font-size: 14px;
             font-weight: 600;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .top-nav .nav-home {
-            background-color: #3498db;
+            background-color: var(--primary-color);
         }
 
         .top-nav .nav-home:hover {
-            background-color: #2980b9;
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
         }
 
         .top-nav .nav-logout {
-            background-color: #e74c3c;
+            background-color: var(--danger-color);
         }
 
         .top-nav .nav-logout:hover {
-            background-color: #c0392b;
+            background-color: var(--danger-hover);
+            transform: translateY(-1px);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        .back-btn {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s ease;
+            font-size: 15px;
+        }
+
+        .back-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            padding: 35px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 25px;
+        }
+
+        /* Elements spanning full width */
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        select {
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            color: var(--text-main);
+            background-color: #fafafa;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px var(--input-focus-ring);
+        }
+
+        input::placeholder {
+            color: #a0aec0;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+            padding-right: 2.5rem;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 10px 0;
+            grid-column: 1 / -1;
+        }
+
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.25);
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .section-title {
+            grid-column: 1 / -1;
+            font-size: 18px;
+            color: var(--text-main);
+            margin: 10px 0 0 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--primary-color);
+            display: inline-block;
+            justify-self: start;
+        }
+
+        @media (max-width: 768px) {
+            form {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                margin: 20px auto;
+            }
+            .card {
+                padding: 24px;
+            }
         }
     </style>
 </head>
@@ -48,106 +255,126 @@
         <a href="/admin" class="nav-home">🏠 Home</a>
         <a href="/logout" class="nav-logout">🔓 Logout</a>
     </div>
+    
     <div class="container">
-        <h1>Edit Customer</h1>
-        <form action="/admin/edit-customer/<%= customer.id %>" method="POST">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="<%= customer.email %>" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" class="form-control" name="password" id="password"
-                    placeholder="Enter new password" required />
-            </div>
-            <div class="form-group">
-                <label for="company">Company</label>
-                <input type="text" class="form-control" id="company" name="company" value="<%= customer.company %>">
-            </div>
+        <div class="header-actions">
+            <h1>Edit Customer</h1>
+            <a href="/admin/view-customers" class="back-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Back to Customers
+            </a>
+        </div>
+        
+        <div class="card">
+            <form action="/admin/edit-customer/<%= customer.id %>" method="POST">
+                
+                <h3 class="section-title">Account Information</h3>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" value="<%= customer.email %>" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">New Password (Optional)</label>
+                    <input type="password" name="password" id="password" placeholder="Leave blank to keep current">
+                </div>
 
-            <div class="form-group">
-                <label for="phone">Phone</label>
-                <input type="text" class="form-control" id="phone" name="phone" value="<%= customer.phone %>">
-            </div>
+                <div class="form-group">
+                    <label for="company">Company Name</label>
+                    <input type="text" id="company" name="company" value="<%= customer.company %>">
+                </div>
 
-            <div class="form-group">
-                <label for="addressLine1">Address Line 1</label>
-                <input type="text" class="form-control" id="addressLine1" name="addressLine1"
-                    value="<%= customer.addressLine1 %>">
-            </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" id="phone" name="phone" value="<%= customer.phone %>">
+                </div>
 
-            <div class="form-group">
-                <label for="addressLine2">Address Line 2</label>
-                <input type="text" class="form-control" id="addressLine2" name="addressLine2"
-                    value="<%= customer.addressLine2 %>">
-            </div>
+                <div class="divider"></div>
+                <h3 class="section-title">Billing Address</h3>
 
-            <div class="form-group">
-                <label for="city">City</label>
-                <input type="text" class="form-control" id="city" name="city" value="<%= customer.city %>">
-            </div>
+                <div class="form-group full-width">
+                    <label for="addressLine1">Address Line 1</label>
+                    <input type="text" id="addressLine1" name="addressLine1" value="<%= customer.addressLine1 %>">
+                </div>
 
-            <div class="form-group">
-                <label for="state">State</label>
-                <input type="text" class="form-control" id="state" name="state" value="<%= customer.state %>">
-            </div>
+                <div class="form-group full-width">
+                    <label for="addressLine2">Address Line 2</label>
+                    <input type="text" id="addressLine2" name="addressLine2" value="<%= customer.addressLine2 %>">
+                </div>
 
-            <div class="form-group">
-                <label for="zipCode">Zip Code</label>
-                <input type="text" class="form-control" id="zipCode" name="zipCode" value="<%= customer.zipCode %>">
-            </div>
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" value="<%= customer.city %>">
+                </div>
 
-            <div class="form-group">
-                <label for="priceLevel">Price Level</label>
-                <select class="form-control" id="priceLevel" name="priceLevel" required>
-                    <option value="1" <% if (customer.priceLevel==1) { %>selected<% } %>>1</option>
-                    <option value="2" <% if (customer.priceLevel==2) { %>selected<% } %>>2</option>
-                    <option value="3" <% if (customer.priceLevel==3) { %>selected<% } %>>3</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="state">State</label>
+                    <input type="text" id="state" name="state" value="<%= customer.state %>">
+                </div>
 
-            <!-- New fields for Average Sales and Trucking Time (Minutes) -->
-            <div class="form-group">
-                <label for="averageSales">Average Sales</label>
-                <input type="number" class="form-control" id="averageSales" name="averageSales"
-                    placeholder="Enter Average Sales">
-            </div>
+                <div class="form-group">
+                    <label for="zipCode">Zip Code</label>
+                    <input type="text" id="zipCode" name="zipCode" value="<%= customer.zipCode %>">
+                </div>
 
-            <div class="form-group">
-                <label for="truckingTime">Trucking Time (Minutes)</label>
-                <input type="number" class="form-control" id="truckingTime" name="truckingTime"
-                    placeholder="Enter Trucking Time">
-            </div>
+                <div class="divider"></div>
+                <h3 class="section-title">Sales Settings</h3>
 
-            <div class="form-group">
-                <label for="taxable">Taxable</label>
-                <select class="form-control" id="taxable" name="taxable">
-                    <option value="Yes" <% if (customer.taxable===true) { %>selected<% } %>>Yes</option>
-                    <option value="No" <% if (customer.taxable===false || customer.taxable===undefined) { %>selected<% }
-                            %>>No</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="priceLevel">Price Level Structure</label>
+                    <select id="priceLevel" name="priceLevel" required>
+                        <option value="1" <% if (customer.priceLevel == 1) { %>selected<% } %>>Level 1 (Highest Margin)</option>
+                        <option value="2" <% if (customer.priceLevel == 2) { %>selected<% } %>>Level 2 (Mid Margin)</option>
+                        <option value="3" <% if (customer.priceLevel == 3) { %>selected<% } %>>Level 3 (Lowest Margin)</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label for="salesRepId">Sales Representative</label>
-                <select class="form-control" id="salesRepId" name="salesRepId">
-                    <option value="">-- None --</option>
-                    <% if (typeof salesReps !=='undefined' && salesReps.length> 0) { %>
-                        <% salesReps.forEach(rep=> { %>
-                            <option value="<%= rep.id %>" <% if (customer.salesRepId===rep.id) { %>selected<% } %>><%=
-                                        rep.name %>
-                            </option>
+                <div class="form-group">
+                    <label for="salesRepId">Sales Representative</label>
+                    <select id="salesRepId" name="salesRepId">
+                        <option value="">-- Unassigned --</option>
+                        <% if (typeof salesReps !== 'undefined' && salesReps.length > 0) { %>
+                            <% salesReps.forEach(rep => { %>
+                                <option value="<%= rep.id %>" <% if (customer.salesRepId === rep.id) { %>selected<% } %>>
+                                    <%= rep.name %>
+                                </option>
                             <% }); %>
-                                <% } %>
-                </select>
-            </div>
+                        <% } %>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Update Customer</button>
-            </div>
-        </form>
+                <div class="form-group">
+                    <label for="averageSales">Average Sales Volume</label>
+                    <input type="number" id="averageSales" name="averageSales" placeholder="e.g. 5000">
+                </div>
 
-        <a href="/admin/view-customers" class="btn btn-secondary">Back to Customers</a>
+                <div class="form-group">
+                    <label for="truckingTime">Trucking Time (Minutes)</label>
+                    <input type="number" id="truckingTime" name="truckingTime" placeholder="e.g. 120">
+                </div>
+
+                <div class="divider"></div>
+                <h3 class="section-title">Tax Configuration</h3>
+
+                <div class="form-group">
+                    <label for="taxable">Taxable Status</label>
+                    <select id="taxable" name="taxable">
+                        <option value="Yes" <% if (customer.taxable === true) { %>selected<% } %>>Yes (Subject to Sales Tax)</option>
+                        <option value="No" <% if (customer.taxable === false || customer.taxable === undefined) { %>selected<% } %>>No (Tax Exempt)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taxId">TAX ID Number</label>
+                    <input type="text" id="taxId" name="taxId" value="<%= customer.taxId || '' %>" placeholder="Enter valid Tax ID">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">Save Customer Changes</button>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 

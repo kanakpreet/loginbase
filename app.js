@@ -693,7 +693,7 @@ app.post('/admin/add-inventory', multerUpload.single('image'), (req, res) => {
         return res.send('Error: No file selected!');
     }
 
-    let { itemName, itemCategory, otherCategory, quantity, cost, priceLevel1, priceLevel2, priceLevel3, rank, taxableItem } = req.body;
+    let { itemName, itemCategory, otherCategory, quantity, cost, priceLevel1, priceLevel2, priceLevel3, rank, taxableItem, length, width, height, weight, palletqty } = req.body;
     const imageUrl = '/uploads/' + req.file.filename;
 
     if (itemCategory === 'Other' && otherCategory) {
@@ -719,7 +719,12 @@ app.post('/admin/add-inventory', multerUpload.single('image'), (req, res) => {
         priceLevel3: parseFloat(priceLevel3),
         rank: 0,
         imageUrl,
-        taxableItem: taxableItem === 'Yes'
+        taxableItem: taxableItem === 'Yes',
+        length: length ? parseFloat(length) : null,
+        width: width ? parseFloat(width) : null,
+        height: height ? parseFloat(height) : null,
+        weight: weight ? parseFloat(weight) : null,
+        palletqty: palletqty ? parseInt(palletqty, 10) : null
     });
 
     // Sync the new item to all other tenants
@@ -760,6 +765,13 @@ app.post('/admin/edit-inventory/:id', multerUpload.single('image'), async (req, 
     currentItem.priceLevel1 = req.body.priceLevel1 ? parseFloat(req.body.priceLevel1) : currentItem.priceLevel1;
     currentItem.priceLevel2 = req.body.priceLevel2 ? parseFloat(req.body.priceLevel2) : currentItem.priceLevel2;
     currentItem.priceLevel3 = req.body.priceLevel3 ? parseFloat(req.body.priceLevel3) : currentItem.priceLevel3;
+
+    // Dimensions and packaging
+    currentItem.length = req.body.length ? parseFloat(req.body.length) : (req.body.length === '' ? null : currentItem.length);
+    currentItem.width = req.body.width ? parseFloat(req.body.width) : (req.body.width === '' ? null : currentItem.width);
+    currentItem.height = req.body.height ? parseFloat(req.body.height) : (req.body.height === '' ? null : currentItem.height);
+    currentItem.weight = req.body.weight ? parseFloat(req.body.weight) : (req.body.weight === '' ? null : currentItem.weight);
+    currentItem.palletqty = req.body.palletqty ? parseInt(req.body.palletqty, 10) : (req.body.palletqty === '' ? null : currentItem.palletqty);
 
     // Fix for taxableItem update
     currentItem.taxableItem = req.body.taxableItem === 'Yes';
@@ -802,7 +814,7 @@ app.get('/admin/add-customer', (req, res) => {
 });
 
 app.post('/admin/add-customer', async (req, res) => {
-    const { email, password, company, phone, addressLine1, addressLine2, city, state, zipCode, priceLevel, taxable, salesRepId } = req.body;
+    const { email, password, company, phone, addressLine1, addressLine2, city, state, zipCode, priceLevel, taxable, salesRepId, taxId } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newCustomer = {
@@ -818,6 +830,7 @@ app.post('/admin/add-customer', async (req, res) => {
         zipCode,
         priceLevel: parseInt(priceLevel),
         taxable: taxable === 'Yes',
+        taxId: taxId || null,
         salesRepId: salesRepId ? parseInt(salesRepId) : null,
         role: 'customer',
         invoices: []
@@ -944,7 +957,7 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-    const { email, password, company, phone, addressLine1, addressLine2, city, state, zipCode } = req.body;
+    const { email, password, company, phone, addressLine1, addressLine2, city, state, zipCode, taxId } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = {
@@ -960,6 +973,7 @@ app.post('/register', async (req, res) => {
         zipCode,
         role: 'customer',
         priceLevel: 3,
+        taxId: taxId || null,
         invoices: [],
         lastInvoiceNumber: 0
     };
@@ -998,6 +1012,7 @@ app.post('/admin/edit-customer/:id', async (req, res) => {
     users[customerIndex].zipCode = req.body.zipCode;
     users[customerIndex].priceLevel = parseInt(req.body.priceLevel);
     users[customerIndex].taxable = req.body.taxable === 'Yes';
+    users[customerIndex].taxId = req.body.taxId || null;
     users[customerIndex].salesRepId = req.body.salesRepId ? parseInt(req.body.salesRepId) : null;
 
     saveData();
